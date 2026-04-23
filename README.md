@@ -22,27 +22,27 @@ Este informe técnico documenta el proceso de intrusión y compromiso total de l
 
 ### Metodología:
 ## A)PASO 1: "Ejecutar el laboratorio docker"
-- Usamos le comando `chmod x+ autodeploy.sh` para otorgarle permisos.
-- Ejecutamos el laboratorio usando el comando `sudo ./auto_deploy.sh` trust.tar.
+- Usamos le comando `chmod x+ autodeploy.sh` para otorgarle permisos
+- Ejecutamos el laboratorio usando el comando `sudo ./auto_deploy.sh` trust.tar
 
 ![1.png](images/img_1776918192787_2d78ffff79ab08.png)
 
 ## B)PASO 2: "comprobar la conexión y escaneo de puertos"
-- Usamos el comando `ping 172.18.02` para comprobar la conexión.
+- Usamos el comando `ping 172.18.02` para comprobar la conexión
 - Para encontrar los puertos disponibles en la maquina usamos el comando `nmap 172.18.02`
 - Deducimos que el puerto mas vulnerable en el tcp/80 http
 ![2.png](images/img_1776918559305_98adb7ba04e438.png)
 
 ## C)Paso 3: "Enumeración Web"
 - Usamos el comando gobuster dir `-u http://172.18.0.2 -w /usr/share/wordlists/dirb/common.txt -x php`
-- Este comando se utiliza para detectar para encontrar rutas ocultas.
+- Este comando se utiliza para detectar para encontrar rutas ocultas
 - La imagen muestra que existe una direccio `secret.php`
 ![3.png](images/img_1776918775746_b6753e79a6ab.png)
 
 ## D)Paso 4:"Explotación"
 - Como ya obtuvimos el nombre de usaurio Mario
-- Procedemos a usar Hydra con el comando hydra -l mario -P /usr/share/wordlists/rockyou.txt ssh://172.18.0.2 -t 4
-- Recordar que ya poseemos el username solo buscamos la contrasña
+- Procedemos a usar Hydra con el comando `hydra -l mario -P /usr/share/wordlists/rockyou.txt ssh://172.18.0.2 -t 4`
+- Recordar que ya poseemos el username solo buscamos la contraseña
 ![4.png](images/img_1776919043071_936e92aa240a3.png)
 
 - Una vez obtenida la contraseña procedemos a acceder a la maquina desde ssh
@@ -50,6 +50,7 @@ Este informe técnico documenta el proceso de intrusión y compromiso total de l
 - Usuario: `mario`
 - Contraseña: `chocolate`
 - Usamos el comando ssh `mario@172.18.0.2 `y luego introducimos la contraseña
+  
 ![4.png](images/img_1776919192825_1b2325ddcaa8a.png)
 
 ##· E)Paso 5:"Escalada de Privilegios"
@@ -66,9 +67,11 @@ Este informe técnico documenta el proceso de intrusión y compromiso total de l
 - Dentro de vim, entramos en el modo de comandos y ejecutamos:
 - `:shell`
 
-  ![6.png](images/img_1776919469498_69ef9f6aab703.png)
 
-- Al ejecutar `whoami`, confirmamos que ahora somos root.
+![6.png](images/img_1776919469498_69ef9f6aab703.png)
+
+- Al ejecutar `whoami`, confirmamos que ahora somos root
+
 ![7.png](images/img_1776919507882_1148b770a52598.png)
 
 
