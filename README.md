@@ -22,27 +22,28 @@ Este informe técnico documenta el proceso de intrusión y compromiso total de l
 
 ### Metodología:
 ## A)PASO 1: "Ejecutar el laboratorio docker"
-- Usamos le comando `chmod x+ autodeploy.sh` para otorgarle permisos
-- Ejecutamos el laboratorio usando el comando `sudo ./auto_deploy.sh` trust.tar
+- Usamos le comando `chmod x+ autodeploy.sh` para otorgarle permisos 
+- Ejecutamos el laboratorio usando el comando `sudo ./auto_deploy.sh` trust.tar 
 
 ![1.png](images/img_1776918192787_2d78ffff79ab08.png)
 
-## B)PASO 2: "comprobar la conexión y escaneo de puertos"
-- Usamos el comando `ping 172.18.02` para comprobar la conexión
-- Para encontrar los puertos disponibles en la maquina usamos el comando `nmap 172.18.02`
-- Deducimos que el puerto mas vulnerable en el tcp/80 http
+## B)PASO 2: "Fase de Reconocimiento: Verificación de Conectividad y Escaneo de Puertos"
+- Usamos el comando `ping 172.18.02` para comprobar la conexión.
+- Para encontrar los puertos disponibles aplicamos el comando `nmap 172.18.02` .
+- Deducimos que el puerto mas vulnerable en el 80/tcp http.
+  
 ![2.png](images/img_1776918559305_98adb7ba04e438.png)
 
-## C)Paso 3: "Enumeración Web"
-- Usamos el comando gobuster dir `-u http://172.18.0.2 -w /usr/share/wordlists/dirb/common.txt -x php`
-- Este comando se utiliza para detectar para encontrar rutas ocultas
-- La imagen muestra que existe una direccio `secret.php`
+## C)Paso 3: "Fase de Reconocimiento: Fuzzing de Directorios y Archivos sobre el Objetivo"
+- Utilizamos la herramienta Gobuster para realizar un ataque de fuzzing sobre el servidor web.
+- Usamos el comando gobuster dir `-u http://172.18.0.2 -w /usr/share/wordlists/dirb/common.txt -x php` .
+- Tras completar el escaneo, se identifico la ruta críticas: `secret.php` .
+  
 ![3.png](images/img_1776918775746_b6753e79a6ab.png)
 
 ## D)Paso 4:"Explotación"
-- Como ya obtuvimos el nombre de usaurio Mario
-- Procedemos a usar Hydra con el comando `hydra -l mario -P /usr/share/wordlists/rockyou.txt ssh://172.18.0.2 -t 4`
-- Recordar que ya poseemos el username solo buscamos la contraseña
+- Como ya obtuvimos el nombre de usaurio **Mario**.
+- Procedemos a usar Hydra con el comando `hydra -l mario -P /usr/share/wordlists/rockyou.txt ssh://172.18.0.2 -t 4` .
 ![4.png](images/img_1776919043071_936e92aa240a3.png)
 
 - Una vez obtenida la contraseña procedemos a acceder a la maquina desde ssh
@@ -53,20 +54,17 @@ Este informe técnico documenta el proceso de intrusión y compromiso total de l
   
 ![4.png](images/img_1776919192825_1b2325ddcaa8a.png)
 
-##· E)Paso 5:"Escalada de Privilegios"
+## E)Paso 5:"Escalada de Privilegios"
 - Ejecutamos `sudo -l` para ver qué comandos puede ejecutar el usuario con privilegios de superusuario sin necesidad de conocer la clave root
 - Resultado: El usuario `mario` puede ejecutar `/usr/bin/vim` como cualquier usuario (ALL) sin restricciones
 
 ![5,png.png](images/img_1776919342737_7b4e79c1b69528.png)
 
-- Dado que vim permite ejecutar comandos de shell desde su interfaz, aprovechamos el privilegio de sudo para obtener una shell de root
-- Usamos: `sudo /usr/bin/vim`
-
+- Dado que vim permite ejecutar comandos de shell desde su interfaz, aprovechamos el privilegio de sudo para obtener una shell de root `sudo /usr/bin/vim`
+  
 ![5,png.png](images/img_1776919409290_342da8e514c078.png)
 
-- Dentro de vim, entramos en el modo de comandos y ejecutamos:
-- `:shell`
-
+- Dentro de vim, entramos en el modo de comandos y ejecutamos: `:shell`
 
 ![6.png](images/img_1776919469498_69ef9f6aab703.png)
 
