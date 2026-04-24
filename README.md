@@ -50,7 +50,7 @@ Este informe técnico documenta el proceso de intrusión y compromiso total de l
 - Credenciales obtenidas:
 - Usuario: `mario`
 - Contraseña: `chocolate`
-- Usamos el comando ssh `mario@172.18.0.2 `y luego introducimos la contraseña
+- Usamos el comando `ssh mario@172.18.0.2 `y luego introducimos la contraseña
   
 ![4.png](images/img_1776919192825_1b2325ddcaa8a.png)
 
@@ -68,7 +68,7 @@ Este informe técnico documenta el proceso de intrusión y compromiso total de l
 
 ![6.png](images/img_1776919469498_69ef9f6aab703.png)
 
-- Al ejecutar `whoami`, confirmamos que ahora somos root
+- Al ejecutar el comando `whoami`, confirmamos que ahora somos `root`
 
 ![7.png](images/img_1776919507882_1148b770a52598.png)
 
